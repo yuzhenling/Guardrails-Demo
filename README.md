@@ -16,7 +16,7 @@ Use the existing venv in this repo:
 ```
 
 Make sure Ollama is running locally (default `http://localhost:11434`), and you have the model pulled
-(this repo defaults to `llama3.2:latest`).
+(this repo defaults to `deepseek-r1:8b`).
 
 ## Run
 

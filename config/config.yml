@@ -1,0 +1,18 @@
+models:
+  - type: main
+    engine: ollama
+    model: deepseek-r1:8b
+    parameters:
+      base_url: http://localhost:11434
+
+# Minimal, deterministic rails:
+# - Dialog rail via Colang flows in `rails.co` (greeting + jailbreak refusal)
+# - Anything not matched by a flow falls back to LLM-driven next-steps/message generation.
+rails:
+  dialog: {}
+
+# Avoid the default FastEmbed provider downloading models from HuggingFace.
+# We register a tiny local provider in `config/config.py`.
+core:
+  embedding_search_provider:
+    name: simple

@@ -3,7 +3,10 @@ from __future__ import annotations
 from difflib import SequenceMatcher
 from typing import List, Optional
 
+import certifi
+
 from nemoguardrails import LLMRails
+from nemoguardrails.rails.llm.config import RailsConfig
 from nemoguardrails.embeddings.index import EmbeddingsIndex, IndexItem
 from nemoguardrails.rails.llm.config import EmbeddingsCacheConfig
 
@@ -51,6 +54,7 @@ class SimpleEmbeddingSearchProvider(EmbeddingsIndex):
 
         scored.sort(key=lambda x: x[0], reverse=True)
         return [it for _, it in scored[:max_results]]
+
 
 
 def init(app: LLMRails):

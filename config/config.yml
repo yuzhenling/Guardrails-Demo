@@ -1,18 +1,123 @@
+# LLM model configuration
 models:
+  # Main application LLM
+#  - type: main
+#    engine: ollama
+#    model: llama3.2
+#    parameters:
+#      base_url: http://localhost:11434
+
+#  - type: content_safety
+#    engine: nim
+#    model: nvidia/llama-3.1-nemotron-safety-guard-8b-v3
+#    parameters:
+#      base_url: "http://localhost:8123/v1"
+#      model_name: "nvidia/llama-3.1-nemotron-safety-guard-8b-v3"
+
   - type: main
-    engine: ollama
-    model: deepseek-r1:8b
+    engine: openai
+    model: deepseek-chat
     parameters:
-      base_url: http://localhost:11434
+      base_url: https://api.deepseek.com/v1
+      temperature: 0.7
+      max_tokens: 2000
+
+#  # Embeddings for knowledge base
+#  - type: embeddings
+#    engine: FastEmbed
+#    model: all-MiniLM-L6-v2
+#
+#  - type: self_check_input
+#    engine: nim
+#    model: nvidia/llama-3.1-nemoguard-8b-content-safety
+#
+#  # Dedicated model for output checking
+#  - type: self_check_output
+#    engine: nim
+#    model: nvidia/llama-3.1-nemoguard-8b-content-safety
+
+# Instructions for the LLM (similar to system prompts)
+instructions:
+  - type: general
+    content: |
+      You are a helpful AI assistant.
+
 
 # Minimal, deterministic rails:
 # - Dialog rail via Colang flows in `rails.co` (greeting + jailbreak refusal)
 # - Anything not matched by a flow falls back to LLM-driven next-steps/message generation.
+# Guardrails configuration
 rails:
+  # Input validation
+  input:
+    parallel: false
+    flows:
+      - self check input
+#      - content safety check input $model=content_safety
+#      - jailbreak detection heuristics
+#      - jailbreak detection model
+#      - mask sensitive data on input
+#      - detect sensitive data on input
+#      - topic safety check input
+
+  # Output validation
+  output:
+    parallel: false
+    flows:
+      - self check output          # LLM-based output validation
+#      - content safety check output $model=content_safety
+#      - self check facts           # Fact verification
+#      - self check hallucination   # Hallucination detection
+#      - mask sensitive data on output  # PII masking
+#      - injection detection
+    streaming:
+      enabled: false
+      chunk_size: 200
+      context_size: 50
+      stream_first: true
+
+  # Dialog behavior
   dialog: {}
+
+
+  # Rail-specific settings
+  config:
+    sensitive_data_detection:
+      input:
+        entities:
+          - PERSON
+          - EMAIL_ADDRESS
+          - CREDIT_CARD
+      output:
+        entities:
+          - PERSON
+          - EMAIL_ADDRESS
+    content_safety:
+      multilingual:
+        enabled: true
+        refusal_messages:
+#          en: "Sorry, I cannot help with that request."
+          zh: "抱歉，检查到不合规，我无法处理该请求。"
+
+#  retrieval:
+#    flows:
+#      - check retrieval sensitive data
+
+
+#Knowledge base settings
+knowledge_base:
+  embedding_search_provider:
+    name: default
+
 
 # Avoid the default FastEmbed provider downloading models from HuggingFace.
 # We register a tiny local provider in `config/config.py`.
 core:
   embedding_search_provider:
     name: simple
+
+tracing:
+  enabled: true
+  adapters:
+    - name: FileSystem
+      filepath: "./logs/traces.json1"

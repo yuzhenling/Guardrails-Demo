@@ -1,0 +1,9 @@
+define bot refuse to respond
+  "抱歉，你的问题包含违禁词语，无法回答。"
+
+define flow check_output_terms
+  $contains_blocked = execute check_blocked_terms
+
+  if $contains_blocked
+    bot refuse to respond
+    stop

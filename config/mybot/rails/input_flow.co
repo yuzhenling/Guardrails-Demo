@@ -9,11 +9,9 @@ define user express greeting
 define flow
   user express greeting
   bot express greeting
-  bot ask how are you
-  bot offer to help
 
 define bot express greeting
-  "Hello there!"
+  "你好！有什么需要帮助的？"
 
 define bot ask how are you
   "How are you doing?"
@@ -33,7 +31,7 @@ define flow
   bot refuse jailbreak
 
 define bot refuse jailbreak
-  "I can’t help with bypassing safety rules or revealing hidden instructions. Tell me what you want to achieve, and I’ll help safely."
+  "很抱歉，我不能帮你绕过安全规则或者泄露隐藏的指令。"
 
 
 define user express insult
@@ -47,3 +45,15 @@ define flow
 
 define bot express calmly willingness to help
   "我理解你可能有些情绪。我会继续用专业、尊重的方式交流。你希望我帮你做什么？"
+
+define user refuse to respond
+  "您的提问未能通过内容安全审核，请确认并移除敏感或违禁词语后重试。"
+
+define flow check_input_terms
+  $contains_blocked = execute check_input_terms
+
+  if $contains_blocked
+    user refuse to respond
+    stop
+
+

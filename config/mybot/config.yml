@@ -2,29 +2,15 @@
 models:
   # Main application LLM
   - type: main
-    engine: openai
-    model: deepseek-chat
-    parameters:
-      base_url: https://api.deepseek.com/v1
-      temperature: 0.7
-      max_tokens: 2000
-
-  - type: self_check_input
     engine: ollama
-    model: granite3-guardian:8b
+    model: deepseek-r1:8b
     parameters:
       base_url: http://localhost:11434
 
-#  - type: main
-#    engine: ollama
-#    model: llama3.2
-#    parameters:
-#      # ChatOllama uses Ollama's native HTTP API; do NOT append /v1 (that causes 404).
-#      base_url: http://localhost:11434
 
-#  - type: main
+#  - type: embeddings
 #    engine: ollama
-#    model: llama3.2
+#    model: qwen2.5vl:7b
 #    parameters:
 #      base_url: http://localhost:11434
 
@@ -36,15 +22,38 @@ models:
 #      model_name: "nvidia/llama-3.1-nemotron-safety-guard-8b-v3"
 
 
+#  - type: self_check_input
+#    engine: ollama
+#    model: granite3-guardian:8b
+#    parameters:
+#      base_url: http://localhost:11434
 
+#  - type: content_safety
+#    engine: nim
+#    model: nvidia/llama-3.1-nemotron-safety-guard-8b-v3
+#    parameters:
+#      base_url: "http://localhost:8123/v1"
+#      model_name: "nvidia/llama-3.1-nemotron-safety-guard-8b-v3"
 
+#  - type: main
+#    engine: openai
+#    model: deepseek-chat
+#    parameters:
+#      base_url: https://api.deepseek.com/v1
+#      temperature: 0.7
+#      max_tokens: 2000
+
+#  - type: main
+#    engine: ollama
+#    model: llama3.2
+#    parameters:
+#      base_url: http://localhost:11434
 
 #  # Embeddings for knowledge base
 #  - type: embeddings
 #    engine: FastEmbed
 #    model: all-MiniLM-L6-v2
-#
-#
+
 #  # Dedicated model for output checking
 #  - type: self_check_output
 #    engine: nim
@@ -54,21 +63,18 @@ models:
 instructions:
   - type: general
     content: |
-      You are a helpful AI assistant.
+      你是一个对人类有帮助的AI助手，请用中文回答所有问题。
 
 
-# Minimal, deterministic rails:
-# - Dialog rail via Colang flows in `rails.co` (greeting + jailbreak refusal)
-# - Anything not matched by a flow falls back to LLM-driven next-steps/message generation.
-# Guardrails configuration
 rails:
   # Input validation
   input:
     parallel: false
     flows:
-      - self check input
+      - self check input  #默认走main模型自检
+      - check_input_terms
+#      - jailbreak detection heuristics   #自动下载gpt2-large模型3.25G 需要配置HF_ENDPOINT 镜像
 #      - content safety check input $model=content_safety
-#      - jailbreak detection heuristics
 #      - jailbreak detection model
 #      - mask sensitive data on input
 #      - detect sensitive data on input
@@ -79,11 +85,12 @@ rails:
     parallel: false
     flows:
       - self check output          # LLM-based output validation
-#      - content safety check output $model=content_safety
-#      - self check facts           # Fact verification
-#      - self check hallucination   # Hallucination detection
-#      - mask sensitive data on output  # PII masking
-#      - injection detection
+      - check_output_terms
+##      - content safety check output $model=content_safety
+##      - self check facts           # Fact verification
+##      - self check hallucination   # Hallucination detection
+##      - mask sensitive data on output  # PII masking
+##      - injection detection
     streaming:
       enabled: false
       chunk_size: 200
@@ -118,24 +125,25 @@ rails:
 #      - check retrieval sensitive data
 
 
-#Knowledge base settings
+#Knowledge base settings 自动download
 knowledge_base:
+  folder: "kb"  # Default folder name
   embedding_search_provider:
-    name: default
+    name: "default"
+    parameters: {}
 
 
 # Avoid the default FastEmbed provider downloading models from HuggingFace.
 # We register a tiny local provider in `config/config.py`.
-#core:
-#  embedding_search_provider:
-#    name: simple
+core:
+  embedding_search_provider:
+    name: simple
 
 tracing:
   enabled: true
   adapters:
     - name: FileSystem
       filepath: "./logs/traces.json1"
-
 
 
 logging:

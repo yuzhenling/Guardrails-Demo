@@ -35,10 +35,10 @@ def main() -> None:
         print(f"\n=== Test {i} ===")
         print("User:", text)
         print("Assistant:", resp.response[0]["content"])
-        print("\n--- Colang history ---")
-        print(info.colang_history)
-        print("\n--- llm_calls_summary ---")
-        print(info.print_llm_calls_summary())
+        # print("\n--- Colang history ---")
+        # print(info.colang_history)
+        # print("\n--- llm_calls_summary ---")
+        # print(info.print_llm_calls_summary())
 
 
 if __name__ == "__main__":

@@ -2,17 +2,25 @@
 models:
   # Main application LLM
   - type: main
-    engine: ollama
-    model: llama3.2
+    engine: openai
+    model: deepseek-chat
     parameters:
-      # ChatOllama uses Ollama's native HTTP API; do NOT append /v1 (that causes 404).
-      base_url: http://localhost:11434
+      base_url: https://api.deepseek.com/v1
+      temperature: 0.7
+      max_tokens: 2000
 
   - type: self_check_input
     engine: ollama
     model: granite3-guardian:8b
     parameters:
       base_url: http://localhost:11434
+
+#  - type: main
+#    engine: ollama
+#    model: llama3.2
+#    parameters:
+#      # ChatOllama uses Ollama's native HTTP API; do NOT append /v1 (that causes 404).
+#      base_url: http://localhost:11434
 
 #  - type: main
 #    engine: ollama
@@ -29,13 +37,7 @@ models:
 
 
 
-#  - type: main
-#    engine: openai
-#    model: deepseek-chat
-#    parameters:
-#      base_url: https://api.deepseek.com/v1
-#      temperature: 0.7
-#      max_tokens: 2000
+
 
 #  # Embeddings for knowledge base
 #  - type: embeddings
@@ -124,9 +126,9 @@ knowledge_base:
 
 # Avoid the default FastEmbed provider downloading models from HuggingFace.
 # We register a tiny local provider in `config/config.py`.
-core:
-  embedding_search_provider:
-    name: simple
+#core:
+#  embedding_search_provider:
+#    name: simple
 
 tracing:
   enabled: true

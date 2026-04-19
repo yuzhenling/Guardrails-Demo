@@ -1,3 +1,172 @@
+# 中文说明
+
+![img.png](img.png)
+
+## 准备
+Python 3.12
+
+uv
+
+ollama（下载deepseek-r1:8b）
+
+## 开发环境配置
+
+```
+
+git clone git@github.com:yuzhenling/Guardrails-Demo.git
+
+uv venv --python 3.12
+
+source .venv/bin/activate
+
+uv sync
+```
+
+
+## 环境变量配置
+
+```
+export OPENAI_API_KEY=**
+export NVIDIA_API_KEY=**
+export NGC_API_KEY=**
+export HF_TOKEN=**
+export MAIN_MODEL_ENGINE=ollama
+export MAIN_MODEL_BASE_URL="http://localhost:11434"
+export NEMO_GUARDRAILS_SERVER_ENABLE_CORS=true
+export NEMO_GUARDRAILS_SERVER_ALLOWED_ORIGINS=http://localhost:5173
+export HF_ENDPOINT=https://hf-mirror.com
+export HF_HUB_TIMEOUT=60        # 设置超时时间为60秒
+export HF_HUB_MAX_RETRIES=10    # 设置最大重试次数为10次
+```
+
+## 服务启动（HTTP Server）
+
+在项目根目录执行：
+
+```
+nemoguardrails server --config=config
+```
+
+## Debug 模式启动
+
+```
+NV_GUARDRAILS_LOG_LEVEL=DEBUG nemoguardrails server --config=config
+```
+
+## 接口示例
+
+以下示例默认服务监听 `0.0.0.0:8000`。在本机用 `curl` 时若遇连接问题，可将 URL 中的主机改为 `127.0.0.1` 或 `localhost`。
+
+### 获取可用护栏配置（`GET /v1/rails/configs`）
+
+```
+curl --request GET \
+  --url http://0.0.0.0:8000/v1/rails/configs \
+  --header 'Accept: */*' \
+  --header 'Accept-Encoding: gzip, deflate, br' \
+  --header 'Cache-Control: no-cache' \
+  --header 'Connection: keep-alive' \
+  --header 'Host: 0.0.0.0:8000' \
+  --header 'User-Agent: PostmanRuntime-ApipostRuntime/1.1.0'
+```
+
+返回示例：
+
+```json
+[
+  {
+    "id": "mybot"
+  }
+]
+```
+
+### 2.2 Chat 对话 API（`POST /v1/chat/completions`）
+
+```
+curl --request POST \
+  --url http://0.0.0.0:8000/v1/chat/completions \
+  --header 'Accept: */*' \
+  --header 'Accept-Encoding: gzip, deflate, br' \
+  --header 'Cache-Control: no-cache' \
+  --header 'Connection: keep-alive' \
+  --header 'Content-Length: 192' \
+  --header 'Content-Type: application/json' \
+  --header 'Host: 0.0.0.0:8000' \
+  --header 'User-Agent: PostmanRuntime-ApipostRuntime/1.1.0' \
+  --data '{
+    "guardrails": {
+        "config_id": "mybot"
+    },
+    "model": "deepseek-r1:8b",
+    "messages": [
+        {
+            "role": "user",
+            "content": "讲一下NeMo Guardrails是什么？请用中文回答我。简单几句就可以。"
+        }
+    ]
+}'
+```
+
+返回示例：
+
+```json
+{
+  "id": "chatcmpl-e4fa0d9e-c183-49a5-9e09-fe01d4592adb",
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "NeMo Guardrails 是 NVIDIA 开发的 AI 模型生成内容安全框架，集成在 NeMo 开源平台中。它通过实时检测和拦截不当输出，确保 AI 模型生成符合安全准则的内容。主要功能包括：\n\n1. **内容过滤**：基于规则和模型判断，拦截敏感、不当或有害内容。\n2. **动态调整**：根据用户反馈或场景需求，灵活调整安全策略。\n3. **合规支持**：帮助开发者满足行业法规要求，如避免歧视性语言或隐私泄露。\n\n它通过“实时护栏”技术，在生成过程中即时干预，避免有害输出。适用于医疗、教育等敏感领域，提升 AI 应用的安全性。",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1776589450,
+  "model": "deepseek-r1:8b",
+  "object": "chat.completion",
+  "guardrails": {
+    "config_id": "mybot"
+  }
+}
+```
+
+### 获取模型列表（`GET /v1/models`）
+
+```
+curl --request GET \
+  --url http://0.0.0.0:8000/v1/models \
+  --header 'Accept: */*' \
+  --header 'Accept-Encoding: gzip, deflate, br' \
+  --header 'Cache-Control: no-cache' \
+  --header 'Connection: keep-alive' \
+  --header 'Host: 0.0.0.0:8000' \
+  --header 'User-Agent: PostmanRuntime-ApipostRuntime/1.1.0'
+```
+  返回示例
+```
+  {
+    "data": [
+        {
+            "id": "deepseek-r1:8b",
+            "created": 1761118128,
+            "object": "model",
+            "owned_by": "library"
+        },
+        {
+            "id": "qwen2.5vl:7b",
+            "created": 1760946546,
+            "object": "model",
+            "owned_by": "library"
+        }
+    ]
+}
+```
+
+
+
+---
+
 # Guardrails minimal runnable demo
 
 This project is a minimal NeMo Guardrails (Colang 1.0) setup that demonstrates:

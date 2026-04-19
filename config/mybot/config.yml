@@ -1,6 +1,19 @@
 # LLM model configuration
 models:
   # Main application LLM
+  - type: main
+    engine: ollama
+    model: llama3.2
+    parameters:
+      # ChatOllama uses Ollama's native HTTP API; do NOT append /v1 (that causes 404).
+      base_url: http://localhost:11434
+
+  - type: self_check_input
+    engine: ollama
+    model: granite3-guardian:8b
+    parameters:
+      base_url: http://localhost:11434
+
 #  - type: main
 #    engine: ollama
 #    model: llama3.2
@@ -14,22 +27,21 @@ models:
 #      base_url: "http://localhost:8123/v1"
 #      model_name: "nvidia/llama-3.1-nemotron-safety-guard-8b-v3"
 
-  - type: main
-    engine: openai
-    model: deepseek-chat
-    parameters:
-      base_url: https://api.deepseek.com/v1
-      temperature: 0.7
-      max_tokens: 2000
+
+
+#  - type: main
+#    engine: openai
+#    model: deepseek-chat
+#    parameters:
+#      base_url: https://api.deepseek.com/v1
+#      temperature: 0.7
+#      max_tokens: 2000
 
 #  # Embeddings for knowledge base
 #  - type: embeddings
 #    engine: FastEmbed
 #    model: all-MiniLM-L6-v2
 #
-#  - type: self_check_input
-#    engine: nim
-#    model: nvidia/llama-3.1-nemoguard-8b-content-safety
 #
 #  # Dedicated model for output checking
 #  - type: self_check_output
@@ -121,3 +133,8 @@ tracing:
   adapters:
     - name: FileSystem
       filepath: "./logs/traces.json1"
+
+
+
+logging:
+  level: DEBUG

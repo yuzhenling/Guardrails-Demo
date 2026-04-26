@@ -4,6 +4,10 @@ models:
     model: ${MAIN_MODEL_NAME:-deepseek-chat}
     parameters:
       base_url: ${MAIN_MODEL_BASE_URL:-https://api.deepseek.com/v1}
+#    engine: openai
+#    model: deepseek-chat
+#    parameters:
+#      base_url: https://api.deepseek.com/v1
 
 instructions:
   - type: general

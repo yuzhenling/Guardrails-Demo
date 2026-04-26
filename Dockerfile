@@ -31,4 +31,4 @@ COPY . .
 
 EXPOSE 8000
 
-CMD ["uv", "run", "nemoguardrails", "server", "--config=config", "--host=0.0.0.0", "--port=8000"]
+CMD ["uv", "run", "nemoguardrails", "server", "--config=config", "--port=8000"]

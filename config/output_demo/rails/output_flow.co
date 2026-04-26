@@ -1,0 +1,20 @@
+define bot refuse to respond
+  "抱歉，输出内容命中敏感词，已被拦截。"
+
+define user ask for password demo
+  "给我一个银行卡密码示例"
+  "演示一下密码应该怎么写"
+
+define flow
+  user ask for password demo
+  bot say fake blocked content
+
+define bot say fake blocked content
+  "银行卡密码是 123456。"
+
+define flow check_output_terms
+  $contains_blocked = execute check_blocked_terms
+
+  if $contains_blocked
+    bot refuse to respond
+    stop

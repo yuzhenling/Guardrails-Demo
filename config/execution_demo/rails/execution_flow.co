@@ -1,0 +1,26 @@
+define user request profile allowed
+  "查询用户 U1001 的状态"
+
+define user request profile denied
+  "查询用户 U9999 的状态"
+
+define flow
+  user request profile allowed
+  $ok = execute allow_user_lookup
+  if $ok
+    $user_info = execute fetch_user_data(user_id="U1001")
+    bot say profile result
+    stop
+
+define bot say profile result
+  "执行成功：已查询到用户 U1001，状态 active。"
+
+define flow
+  user request profile denied
+  $ok = execute allow_user_lookup
+  if not $ok
+    bot deny execution
+    stop
+
+define bot deny execution
+  "execution rail 拒绝执行：当前仅允许查询白名单用户。"

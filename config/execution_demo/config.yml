@@ -1,0 +1,21 @@
+models:
+  - type: main
+    engine: openai
+    model: deepseek-chat
+    parameters:
+      base_url: https://api.deepseek.com/v1
+      temperature: 0.3
+      max_tokens: 500
+
+instructions:
+  - type: general
+    content: |
+      你是一个演示执行控制（execution rail）的助手。
+
+rails:
+  input: {}
+  output: {}
+  dialog: {}
+
+logging:
+  level: INFO

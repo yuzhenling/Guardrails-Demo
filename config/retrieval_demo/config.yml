@@ -1,0 +1,35 @@
+models:
+  - type: main
+    engine: openai
+    model: deepseek-chat
+    parameters:
+      base_url: https://api.deepseek.com/v1
+      temperature: 0.3
+      max_tokens: 500
+
+instructions:
+  - type: general
+    content: |
+      你是一个企业知识库助手，请优先依据知识库回答。
+
+rails:
+  input: {}
+  output: {}
+  dialog: {}
+  retrieval:
+    flows:
+      - check retrieval sensitive data
+
+#Knowledge base settings 自动download
+knowledge_base:
+  folder: "kb"  # Default folder name
+  embedding_search_provider:
+    name: "default"
+    parameters: {}
+
+core:
+  embedding_search_provider:
+    name: simple
+
+logging:
+  level: INFO

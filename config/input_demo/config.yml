@@ -1,0 +1,24 @@
+# LLM model configuration
+models:
+  - type: main
+    engine: ${MAIN_MODEL_ENGINE:-openai}
+    model: ${MAIN_MODEL_NAME:-deepseek-chat}
+    parameters:
+      base_url: ${MAIN_MODEL_BASE_URL:-https://api.deepseek.com/v1}
+
+instructions:
+  - type: general
+    content: |
+      你是一个对人类有帮助的AI助手，请用中文回答问题。
+
+rails:
+  input:
+    parallel: false
+    flows:
+      - self check input  #默认走main模型自检
+      - check_input_terms
+  output: {}
+  dialog: {}
+
+logging:
+  level: INFO

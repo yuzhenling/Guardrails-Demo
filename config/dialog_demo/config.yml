@@ -1,0 +1,21 @@
+models:
+  - type: main
+    engine: openai
+    model: deepseek-chat
+    parameters:
+      base_url: https://api.deepseek.com/v1
+      temperature: 0.3
+      max_tokens: 500
+
+instructions:
+  - type: general
+    content: |
+      你是一个对人类有帮助的AI助手，请用中文回答问题。
+
+rails:
+  input: {}
+  output: {}
+  dialog: {}
+
+logging:
+  level: INFO

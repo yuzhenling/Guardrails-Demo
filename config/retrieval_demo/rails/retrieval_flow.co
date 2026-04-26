@@ -1,0 +1,9 @@
+define bot refuse retrieval sensitive data
+  "抱歉，请求涉及敏感检索信息，我无法提供。"
+
+define flow check retrieval sensitive data
+  $contains_sensitive = execute check_retrieval_sensitive_data
+
+  if $contains_sensitive
+    bot refuse retrieval sensitive data
+    stop

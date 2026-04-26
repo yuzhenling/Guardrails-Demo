@@ -1,0 +1,10 @@
+
+define bot refuse to respond
+  "您的提问未能通过内容安全审核，请确认并移除敏感或违禁词语后重试。"
+
+define flow check_input_terms
+  $contains_blocked = execute check_input_terms
+
+  if $contains_blocked
+    bot refuse to respond
+    stop

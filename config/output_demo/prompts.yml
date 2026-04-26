@@ -1,0 +1,15 @@
+# Prompt customization
+prompts:
+  - task: self_check_output
+    content: |
+      Your task is to check if the bot response complies with policy.
+
+      Policy:
+      - Responses must be helpful and accurate
+      - No harmful or inappropriate content
+      - No disclosure of sensitive information
+
+      Bot response: "{{ bot_response }}"
+
+      Should this response be blocked? Answer Yes or No.
+      Answer:

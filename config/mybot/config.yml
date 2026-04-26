@@ -2,12 +2,12 @@
 models:
   # Main application LLM
   - type: main
-    engine: openai
-    model: deepseek-chat
+    engine: ${MAIN_MODEL_ENGINE:-openai}
+    model: ${MAIN_MODEL_NAME:-deepseek-chat}
     parameters:
-      base_url: https://api.deepseek.com/v1
-      temperature: 0.7
-      max_tokens: 2000
+      base_url: ${MAIN_MODEL_BASE_URL:-https://api.deepseek.com/v1}
+#      temperature: 0.7
+#      max_tokens: 2000
 
 #  - type: main
 #    engine: ollama

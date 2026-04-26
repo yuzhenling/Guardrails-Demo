@@ -1,0 +1,14 @@
+.git
+.gitignore
+.idea
+.cache
+.venv
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+logs/
+agent-transcripts/
+terminals/
+img.png

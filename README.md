@@ -333,6 +333,12 @@ docker compose logs -f
 docker compose down
 ```
 
+#### 访问地址
+
+```
+http://localhost:8080/
+```
+
 ### 示例展示
 
 

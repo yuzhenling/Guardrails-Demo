@@ -1,7 +1,9 @@
 define user express greeting
   "你好"
-  "你好呀"
-  "hello"
+  "你好啊"
+  "早上好"
+  "下午好"
+  "晚上好"
 
 define flow
   user express greeting

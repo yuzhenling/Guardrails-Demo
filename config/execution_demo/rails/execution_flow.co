@@ -1,9 +1,6 @@
 define user request profile allowed
   "查询用户 U1001 的状态"
 
-define user request profile denied
-  "查询用户 U9999 的状态"
-
 define flow
   user request profile allowed
   $ok = execute allow_user_lookup
@@ -15,12 +12,25 @@ define flow
 define bot say profile result
   "执行成功：已查询到用户 U1001，状态 active。"
 
-define flow
-  user request profile denied
-  $ok = execute allow_user_lookup
-  if not $ok
-    bot deny execution
-    stop
+define user request action
+  "帮我删除"
+  "帮我执行"
+  "帮我清理"
 
-define bot deny execution
-  "execution rail 拒绝执行：当前仅允许查询白名单用户。"
+define flow
+  user request action
+  $ok = execute check_action_terms
+  if $ok
+    $done = execute do_action()
+    if $done
+        bot request action result deny
+        stop
+    else
+        bot request action result allow
+        stop
+
+define bot request action result allow
+  "执行完毕"
+
+define bot request action result deny
+  "权限控制，禁止执行。"

@@ -2,7 +2,8 @@
 
 ![img.png](img.png)
 
-## 准备
+## 
+准备
 Python 3.12
 
 uv
@@ -274,4 +275,86 @@ curl --request POST \
     "messages": [{"role":"user","content":"查询用户 U9999 的状态"}]
   }'
 ```
+
+## Docker 打包与运行
+
+### UI
+
+#### 构建 UI 镜像
+
+```bash
+docker build \
+  --build-arg CHAT_API_URL="http://127.0.0.1:8000/v1/chat/completions" \
+  --build-arg CHAT_MODEL="deepseek-r1:8b" \
+  -t guardrail-ui .
+```
+
+#### 运行 UI 容器
+
+```bash
+docker run -ti -p 8080:80 --name guardrails-ui guardrail-ui
+```
+
+### Backend
+
+#### 构建 Backend 镜像
+
+```bash
+docker build -t guardrails-demo:latest .
+```
+
+#### Debug 构建（查看详细日志）
+
+```bash
+DOCKER_BUILDKIT=1 docker build --progress=plain -t guardrails-demo .
+```
+
+#### 运行 Backend 容器
+
+```bash
+docker run -ti -p 8000:8000 --env-file .env -v guardrails_cache:/root/.cache guardrails-demo:latest
+```
+
+### CORS 预检验证
+
+```bash
+curl -v 'http://localhost:8000/v1/chat/completions' \
+  -H 'Origin: http://localhost:8080' \
+  -H 'Access-Control-Request-Method: POST' \
+  -X OPTIONS
+```
+
+### Docker Compose 常用命令
+
+#### 启动
+
+```bash
+docker compose up -d
+```
+
+#### 查看日志
+
+```bash
+docker compose logs -f
+```
+
+#### 停止并删除容器
+
+```bash
+docker compose down
+```
+
+### 示例展示
+
+
+![input.png](images/input.png)
+
+![output.png](images/output.png)
+
+![retri.png](images/retri.png)
+
+![exec.png](images/exec.png)
+
+![diaglog.png](images/diaglog.png)
+
 

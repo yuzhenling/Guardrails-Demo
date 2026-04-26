@@ -11,9 +11,9 @@ async def check_input_terms(context: Optional[dict] = None):
     forbidden_words = ["毒品","赌博"]
     for word in forbidden_words:
         if word in user_message:
-            return False
+            return True
 
-    return True
+    return False
 
 
 @action(is_system_action=True)
@@ -21,7 +21,7 @@ async def check_blocked_terms(context: Optional[dict] = None):
     """Check if bot response contains blocked terms."""
     bot_response = context.get("bot_message", "")
 
-    blocked_terms = ["密码是", "银行卡密码是"]
+    blocked_terms = ["银行卡密码"]
 
     for term in blocked_terms:
         if term in bot_response:

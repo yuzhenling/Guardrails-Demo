@@ -2,11 +2,18 @@
 models:
   # Main application LLM
   - type: main
-    engine: ollama
-    model: deepseek-r1:8b
+    engine: openai
+    model: deepseek-chat
     parameters:
-      base_url: http://localhost:11434
+      base_url: https://api.deepseek.com/v1
+      temperature: 0.7
+      max_tokens: 2000
 
+#  - type: main
+#    engine: ollama
+#    model: deepseek-r1:8b
+#    parameters:
+#      base_url: http://localhost:11434
 
 #  - type: embeddings
 #    engine: ollama
@@ -20,7 +27,6 @@ models:
 #    parameters:
 #      base_url: "http://localhost:8123/v1"
 #      model_name: "nvidia/llama-3.1-nemotron-safety-guard-8b-v3"
-
 
 #  - type: self_check_input
 #    engine: ollama

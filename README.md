@@ -289,11 +289,6 @@ docker build \
   -t guardrail-ui .
 ```
 
-#### 运行 UI 容器
-
-```bash
-docker run -ti -p 8080:80 --name guardrails-ui guardrail-ui
-```
 
 ### Backend
 
@@ -309,12 +304,6 @@ docker build -t guardrails-demo:latest .
 DOCKER_BUILDKIT=1 docker build --progress=plain -t guardrails-demo .
 ```
 
-#### 运行 Backend 容器
-
-```bash
-docker run -ti -p 8000:8000 --env-file .env -v guardrails_cache:/root/.cache guardrails-demo:latest
-```
-
 ### CORS 预检验证
 
 ```bash
@@ -324,7 +313,7 @@ curl -v 'http://localhost:8000/v1/chat/completions' \
   -X OPTIONS
 ```
 
-### Docker Compose 常用命令
+### Docker Compose 
 
 #### 启动
 
